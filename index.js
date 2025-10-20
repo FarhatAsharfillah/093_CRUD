@@ -42,3 +42,23 @@ app.get('api/users', (req, res) => {
         res.json (results);
     });
 });
+
+//POST
+app.post('/api/users', (req, res) => {
+    const { nama, nim, kelas } = req.body;
+    if (!nama || !nim || !kelas) {
+        return res.status(400).json({message: 'nama, nim, dan kelas harus diisi!' });
+    }
+
+    db.query (
+        'INSERT INTO mahasiswa (nama, nim, kelas) VALUES (?, ?, ?)', 
+        [nama, nim, kelas], 
+        (err, results) => {
+            if (err) {
+                console.error ('Gagal menambahkan data'+ err.stack);
+                return res.status(500).json({ message: 'Gagal menambahkan data' });
+            }
+            res.status(201).json({ message: 'Data berhasil ditambahkan'});
+        }
+    );
+});
